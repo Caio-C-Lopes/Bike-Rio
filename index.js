@@ -13,7 +13,8 @@ const btnBuscar = document.getElementById("btnBuscar");
 const botaoQtd = document.getElementById("qtdDropdown");
 const itensDropdown = document.querySelectorAll(".dropdown-item");
 const listaBicicletarios = document.getElementById("listaBicicletarios");
-const pontoPartida = document.getElementById("pontoPartida");
+const buscarTexto = document.getElementById("buscarTexto");
+const loadingSpinner = document.getElementById("loadingSpinner");
 
 //variaveis
 let bicicletarios = [];
@@ -108,22 +109,24 @@ function renderizarMapa(origem, bicicletarios) {
     marcadores.clearLayers();//limpa os marcadores antigos
 
     L.marker([origem.lat, origem.lon])
-        .bindPopup("Endereço informado")
+        .bindPopup(`<strong>Endereço informado: </strong>${origem.name}`)
         .addTo(marcadores);
-
+        
     for(let i = 0; i < qtdBicicletarios; i++){
         let bicicletario = bicicletarios[i];
         L.marker([bicicletario.lat, bicicletario.lng], { icon: bikeIcon })
-            .bindPopup("<strong>" + bicicletario.name + "</strong><br>" + "Distância: " + bicicletario.distancia.toFixed(2) + " km")
+            .bindPopup(`<strong>${bicicletario.name}</strong><br> Distância: ${bicicletario.distancia.toFixed(2)} km`)
             .addTo(marcadores);
     }
-    
-    pontoPartida.innerHTML = "<strong> Ponto de partida: </strong>" + origem.name;
 }
 
 //ao clica no botao de buscar
 async function buscar(e) {
     e.preventDefault(); //!!!! impede de recarregar a página, sempre que da submit em um form ele recarrega a pagina
+
+    btnBuscar.disabled = true;
+    buscarTexto.textContent = "Carregando...";
+    loadingSpinner.classList.remove("d-none");
 
     let origem = await geocodificarEndereco(inputEndereco.value.trim());
     if (!origem) {
@@ -145,5 +148,9 @@ async function buscar(e) {
     bicicletariosDistancia.sort((a,b) => a.distancia - b.distancia);
     renderizarLista(bicicletariosDistancia);
     renderizarMapa(origem, bicicletariosDistancia);
+
+    btnBuscar.disabled = false;
+    buscarTexto.textContent = "Buscar";
+    loadingSpinner.classList.add("d-none");    
 }
 btnBuscar.addEventListener("click", buscar);
