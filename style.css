@@ -4,9 +4,9 @@
 
 #map {
     width: 100%;
-    height: 100%;
+    height: 85%;
 }
 
-li.list-group-item {
-    cursor: pointer;
+#listaBicicletarios {
+    font-size: 20px;
 }
