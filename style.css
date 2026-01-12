@@ -1,0 +1,12 @@
+.h500 { height: 500px; }
+.h200 { height: 200px; }
+.h70  { height: 70px; }
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+li.list-group-item {
+    cursor: pointer;
+}
